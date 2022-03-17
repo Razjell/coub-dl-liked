@@ -22,7 +22,7 @@ api.timeline.me_liked()
 # 2. copy each page (e.g., page=1,page=2,page=...) from above to mylikes.txt file as a new line (I put 2 pages of my old likes as demo)
 # 3. run code below
 
-with open('./mylikes.txt') as f:
+with open('./mylikes.txt', encoding="utf8") as f:
     likes = f.readlines()
 
 # awkwardly find IDs from the coub api data structure... 
@@ -82,4 +82,3 @@ for id in IDs:
         os.system(f'rm {out_video_fln_tmp} {out_wav_fln} {mp3_fln} {video_fln}')
     except: # nothing should go wrong but if it does ignore it
         pass
-# EOF
