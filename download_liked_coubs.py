@@ -1,6 +1,6 @@
 import os
 from coub_api import CoubApi
-import urllib.request
+import urllib
 import soundfile as sf
 import pandas as pd
 

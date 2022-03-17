@@ -4,9 +4,9 @@ Download your liked videos from coub.com. Download mp3 and mp4 files and combine
 ### Dependencies
 ```Python
 coub_api 
-soundfile 
 ffmpeg 
-pandas # using pd for saving csv files
+soundfile 
+pandas
 ```
 
 ### Usage `download_liked_coubs.py`
