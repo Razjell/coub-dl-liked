@@ -49,20 +49,31 @@ for i in ALL_IDs.to_numpy()[:,1]: # use 1st col
         IDs.append(i)
 
 # download liked videos to dir videos/
+with_watermarks = True
 for id in IDs:
     try:
         # use coub API to get target coub
         coub = api.coubs.get_coub(str(id))
-
+        
         # get audio from coub API
         mp3_url = coub.file_versions.dict()['html5']['audio']['high']['url'].split()[0]
         mp3_fln = coub.file_versions.dict()['html5']['audio']['high']['url'].split()[0].split('/')[-1]
-        video_url = coub.file_versions.dict()['html5']['video']['high']['url'].split()[0]
-        video_fln = coub.file_versions.dict()['html5']['video']['high']['url'].split()[0].split('/')[-1]
+        if with_watermarks:
+            # mp4 download link with watermarks
+            video_url = coub.file_versions.dict()['html5']['video']['high']['url'].split()[0]
+            video_fln = coub.file_versions.dict()['html5']['video']['high']['url'].split()[0].split('/')[-1]
+        else:
+            # try geting videos without watermarks but video quality is lower
+            urllib.request.urlretrieve(f'https://coub.com/api/v2/coubs/{id}/segments', 'segments.txt')
+            with open('./segments.txt', encoding="utf8") as f:
+                seg = f.readlines()
+            # choose first mp4 download link 
+            video_url = seg[0].split()[0].split('"cutter_ios":')[1].split('"')[1]
+            video_fln = video_url.split('/')[-1]
 
         # download mp3 and mp4 files from coub.com
         urllib.request.urlretrieve(mp3_url, mp3_fln)	
-        urllib.request.urlretrieve(video_url, video_fln)	
+        urllib.request.urlretrieve(video_url, video_fln) 
 
         # filenames
         out_video_fln = f'{id}.mp4'
@@ -77,8 +88,8 @@ for id in IDs:
         # loop video to duration of file len
         os.system(f'ffmpeg -stream_loop -1 -t {wav_len} -i {video_fln} -c copy {out_video_fln_tmp}')
         # combine MP3 with looped video
-        os.system(f'ffmpeg -i {out_video_fln_tmp} -i {mp3_fln} -c:v copy -c:a aac videos/{out_video_fln}')
+        os.system(f'ffmpeg -i {out_video_fln_tmp} -i {mp3_fln} -c:a aac -map 0:v:0 -map 1:a:0 videos/{out_video_fln}')
         # remove temp files
-        os.system(f'rm {out_video_fln_tmp} {out_wav_fln} {mp3_fln} {video_fln}')
+        os.system(f'rm {out_video_fln_tmp} {out_wav_fln} {mp3_fln} {video_fln} segments.txt')
     except: # nothing should go wrong but if it does ignore it
         pass

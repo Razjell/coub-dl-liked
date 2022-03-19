@@ -21,3 +21,6 @@ All video loops should be downloaded to `/videos` directory.
 2. run the script
 
 All video loops should be downloaded to `/videos` directory.
+
+### Options
+Both scripts have an option for downloading coubs without the watermark but if the option is selected then the video quality is lower.
