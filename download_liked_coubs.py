@@ -69,6 +69,8 @@ for id in IDs:
                 seg = f.readlines()
             # choose first mp4 download link 
             video_url = seg[0].split()[0].split('"cutter_ios":')[1].split('"')[1]
+            # another possible link for mp4 file
+            # vide_url_nowatermark = seg[0].split()[0].split('"cutter_mp4_dashed":')[1].split('"')[7]
             video_fln = video_url.split('/')[-1]
 
         # download mp3 and mp4 files from coub.com
